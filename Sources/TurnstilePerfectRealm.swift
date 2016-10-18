@@ -1,6 +1,6 @@
 //
-//  TurnstilePerfectSQLite.swift
-//  Perfect-GameTime
+//  TurnstilePerfectRealm.swift
+//  PerfectTurnstileSQLite
 //
 //  Created by Jonathan Guthrie on 2016-10-17.
 //
