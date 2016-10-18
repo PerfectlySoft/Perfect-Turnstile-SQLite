@@ -7,6 +7,7 @@
 //
 
 import Turnstile
+import TurnstileCrypto
 import SQLiteStORM
 import StORM
 
@@ -25,15 +26,6 @@ open class AuthAccount : SQLiteStORM, Account {
 
 	public var internal_token: AccessTokenStore = AccessTokenStore()
 
-//	init(id: String) {
-//		super.init()
-//		uniqueID = id
-//	}
-//	init(_ id: String) {
-//		super.init()
-//		uniqueID = id
-//	}
-
 	override open func table() -> String {
 		return "users"
 	}
@@ -46,7 +38,7 @@ open class AuthAccount : SQLiteStORM, Account {
 	override open func to(_ this: StORMRow) {
 		uniqueID	= this.data["uniqueID"] as! String
 		username	= (this.data["username"] as! String)
-		password	= (this.data["password"] as! String)
+		password	= (this.data["password"] as! String) // lets not read the password!
 		facebookID	= (this.data["facebookID"] as! String)
 		googleID	= (this.data["googleID"] as! String)
 		firstname	= (this.data["firstname"] as! String)
@@ -74,11 +66,21 @@ open class AuthAccount : SQLiteStORM, Account {
 		}
 	}
 
+	func make() throws {
+		do {
+			password = BCrypt.hash(password: password)
+			try create() // can't use save as the id is populated
+		} catch {
+			print(error)
+		}
+	}
 	func get(_ un: String, _ pw: String) throws -> AuthAccount {
 		let cursor = StORMCursor(limit: 1, offset: 0)
 		do {
-			try select(whereclause: "username = :1 AND password = :2", params: [un,pw], orderby: [], cursor: cursor)
+			try select(whereclause: "username = :1", params: [un], orderby: [], cursor: cursor)
 			to(self.results.rows[0])
+
+			let _ = try BCrypt.verify(password: pw, matchesHash: password)
 			return self
 		} catch {
 			print(error)
@@ -96,7 +98,6 @@ open class AuthAccount : SQLiteStORM, Account {
 		} catch {
 			print("Exists error: \(error)")
 			return false
-			//throw StORMError.noRecordFound
 		}
 	}
 }

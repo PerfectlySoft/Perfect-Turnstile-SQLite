@@ -25,10 +25,10 @@ class AuthRealm : Realm {
 			return try authenticate(credentials: credentials)
 		case let credentials as AccessToken:
 			return try authenticate(credentials: credentials)
-//		case let credentials as FacebookAccount:
-//			return try authenticate(credentials: credentials)
-//		case let credentials as GoogleAccount:
-//			return try authenticate(credentials: credentials)
+			//		case let credentials as FacebookAccount:
+			//			return try authenticate(credentials: credentials)
+			//		case let credentials as GoogleAccount:
+		//			return try authenticate(credentials: credentials)
 		default:
 			throw UnsupportedCredentialsError()
 		}
@@ -64,21 +64,21 @@ class AuthRealm : Realm {
 		}
 	}
 
-//	private func authenticate(credentials: FacebookAccount) throws -> Account {
-//		if let account = accounts.filter({$0.facebookID == credentials.uniqueID}).first {
-//			return account
-//		} else {
-//			return try register(credentials: credentials)
-//		}
-//	}
-//
-//	private func authenticate(credentials: GoogleAccount) throws -> Account {
-//		if let account = accounts.filter({$0.googleID == credentials.uniqueID}).first {
-//			return account
-//		} else {
-//			return try register(credentials: credentials)
-//		}
-//	}
+	//	private func authenticate(credentials: FacebookAccount) throws -> Account {
+	//		if let account = accounts.filter({$0.facebookID == credentials.uniqueID}).first {
+	//			return account
+	//		} else {
+	//			return try register(credentials: credentials)
+	//		}
+	//	}
+	//
+	//	private func authenticate(credentials: GoogleAccount) throws -> Account {
+	//		if let account = accounts.filter({$0.googleID == credentials.uniqueID}).first {
+	//			return account
+	//		} else {
+	//			return try register(credentials: credentials)
+	//		}
+	//	}
 
 	/**
 	Registers PasswordCredentials against the AuthRealm.
@@ -101,21 +101,21 @@ class AuthRealm : Realm {
 				newAccount.username = credentials.username
 				newAccount.password = credentials.password
 				do {
-					try newAccount.create() // can't use save as the id is populated
+					try newAccount.make() // can't use save as the id is populated
 				} catch {
 					print("REGISTER ERROR: \(error)")
 				}
 			}
-//		case let credentials as FacebookAccount:
-//			guard accounts.filter({$0.facebookID == credentials.uniqueID}).first == nil else {
-//				throw AccountTakenError()
-//			}
-//			newAccount.facebookID = credentials.uniqueID
-//		case let credentials as GoogleAccount:
-//			guard accounts.filter({$0.googleID == credentials.uniqueID}).first == nil else {
-//				throw AccountTakenError()
-//			}
-//			newAccount.googleID = credentials.uniqueID
+			//		case let credentials as FacebookAccount:
+			//			guard accounts.filter({$0.facebookID == credentials.uniqueID}).first == nil else {
+			//				throw AccountTakenError()
+			//			}
+			//			newAccount.facebookID = credentials.uniqueID
+			//		case let credentials as GoogleAccount:
+			//			guard accounts.filter({$0.googleID == credentials.uniqueID}).first == nil else {
+			//				throw AccountTakenError()
+			//			}
+		//			newAccount.googleID = credentials.uniqueID
 		default:
 			throw UnsupportedCredentialsError()
 		}
