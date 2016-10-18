@@ -12,6 +12,8 @@ public struct AuthenticationConfig {
 
 	public var denied: String?
 
+	public init() {}
+
 	public mutating func include(_ str: String) {
 		inclusions.append(str)
 	}

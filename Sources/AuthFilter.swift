@@ -9,14 +9,14 @@
 import PerfectHTTP
 
 
-struct AuthFilter: HTTPRequestFilter {
+public struct AuthFilter: HTTPRequestFilter {
 	var authenticationConfig = AuthenticationConfig()
 
 	public init(_ cfg: AuthenticationConfig) {
 		authenticationConfig = cfg
 	}
 
-	func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
+	public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
 		print("%%%%%%%%  CHECKING NOW  %%%%%%%%")
 
 //		guard let denied = authenticationConfig.denied else {
