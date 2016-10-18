@@ -17,7 +17,6 @@ public struct AuthFilter: HTTPRequestFilter {
 	}
 
 	public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
-		print("%%%%%%%%  CHECKING NOW  %%%%%%%%")
 
 //		guard let denied = authenticationConfig.denied else {
 //			callback(.continue(request, response))
@@ -26,12 +25,9 @@ public struct AuthFilter: HTTPRequestFilter {
 
 		if authenticationConfig.inclusions.contains(request.path) &&
 			!authenticationConfig.exclusions.contains(request.path) {
-			print("PERFORM AUTH")
 			if request.user.authenticated {
-				print("AUTH OK")
 				callback(.continue(request, response))
 			} else {
-				print("AUTH NOT OK, booting")
 				response.status = .unauthorized
 				callback(.halt(request, response))
 			}
