@@ -75,7 +75,7 @@ http://localhost:8181/register
 
 These routes are using Mustache files in the webroot directory.
 
-Example Mustache files can be found in the 
+Example Mustache files can be found in [https://github.com/PerfectExamples/Perfect-Turnstile-SQLite-Demo](https://github.com/PerfectExamples/Perfect-Turnstile-SQLite-Demo)
 
 ## Creating an HTTP Server with Authentication
 
