@@ -1,6 +1,6 @@
 //
-//  TurnstilePerfectRealm.swift
-//  PerfectTurnstileSQLite
+//  TurnstilePerfectSQLite.swift
+//  Perfect-GameTime
 //
 //  Created by Jonathan Guthrie on 2016-10-17.
 //
@@ -16,8 +16,8 @@ public class TurnstilePerfectRealm {
 	public var responseFilter: (HTTPResponseFilter, HTTPFilterPriority)
 
 	private let turnstile: Turnstile
-
-	public init(sessionManager: SessionManager = MemorySessionManager(), realm: Realm = AuthRealm()) {
+	//MemorySessionManager
+	public init(sessionManager: SessionManager = PerfectSessionManager(), realm: Realm = AuthRealm()) {
 		turnstile = Turnstile(sessionManager: sessionManager, realm: realm)
 		let filter = TurnstileFilter(turnstile: turnstile)
 

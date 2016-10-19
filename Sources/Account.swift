@@ -67,6 +67,7 @@ open class AuthAccount : SQLiteStORM, Account {
 	}
 
 	func make() throws {
+		print("IN MAKE")
 		do {
 			password = BCrypt.hash(password: password)
 			try create() // can't use save as the id is populated
