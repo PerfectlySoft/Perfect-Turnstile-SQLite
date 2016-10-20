@@ -94,10 +94,9 @@ class AuthRealm : Realm {
 		switch credentials {
 		case let credentials as UsernamePassword:
 			do {
-				guard account.exists(credentials.username) else {
+				if account.exists(credentials.username) {
 					throw AccountTakenError()
 				}
-			} catch {
 				newAccount.username = credentials.username
 				newAccount.password = credentials.password
 				do {
@@ -105,6 +104,8 @@ class AuthRealm : Realm {
 				} catch {
 					print("REGISTER ERROR: \(error)")
 				}
+			} catch {
+				throw AccountTakenError()
 			}
 			//		case let credentials as FacebookAccount:
 			//			guard accounts.filter({$0.facebookID == credentials.uniqueID}).first == nil else {
