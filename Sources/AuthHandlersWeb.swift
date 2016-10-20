@@ -21,9 +21,9 @@ public class AuthHandlersWeb {
 	================================================================================================================= */
 	open static func indexHandlerGet(request: HTTPRequest, _ response: HTTPResponse) {
 
-		print("request.user.authDetails: \(request.user.authDetails)")
-		print("request.user.authDetails?.account: \(request.user.authDetails?.account)")
-		print("request.user.authDetails?.account.uniqueID: \(request.user.authDetails?.account.uniqueID)")
+//		print("request.user.authDetails: \(request.user.authDetails)")
+//		print("request.user.authDetails?.account: \(request.user.authDetails?.account)")
+//		print("request.user.authDetails?.account.uniqueID: \(request.user.authDetails?.account.uniqueID)")
 
 		let context: [String : Any] = [
 			"accountID": request.user.authDetails?.account.uniqueID ?? "",
