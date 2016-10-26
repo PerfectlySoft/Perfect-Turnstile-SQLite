@@ -162,7 +162,7 @@ let pturnstile = TurnstilePerfectRealm()
 connect = SQLiteConnect("./authdb")
 ```
 
-定义并初始化身份验证表“
+定义并初始化身份验证表：
 
 ``` swift 
 let auth = AuthAccount(connect!)
