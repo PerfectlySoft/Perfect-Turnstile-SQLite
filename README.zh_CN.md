@@ -1,4 +1,4 @@
-# Perfect Turnstile with SQLite [简体中文](README.zh_CN.md)
+# Perfect Turnstile 与 SQLite 集成用户身份验证 [English](README.md)
 
 <p align="center">
     <a href="http://perfect.org/get-involved.html" target="_blank">
@@ -40,11 +40,11 @@
 </p>
 
 
-This project integrates Stormpath's Turnstile authentication system into a single package with Perfect, and a SQLite ORM.
+该项目将 Stormpath 公司的 Turnstile 用户身份验证系统与 SQLite 的数据库对象关系管理集成到了同一个软件函数库上。
 
-## Installation
+## 安装
 
-In your Package.swift file, include the following line inside the dependancy array:
+请在您的 Package.swift 文件中增加如下依存关系：
 
 ``` swift
 .Package(
@@ -53,19 +53,19 @@ In your Package.swift file, include the following line inside the dependancy arr
 	)
 ```
 
-## Included JSON Routes
+## 增加 JSON API 路由入口点
 
-The framework includes certain basic routes:
+本项目依赖于以下基本路由：
 
-```
-POST /api/v1/login (with username & password form elements)
-POST /api/v1/register (with username & password form elements)
+```HTTP
+POST /api/v1/login （包括带有用户名和密码的表单）
+POST /api/v1/register （包括带有用户名和密码的表单）
 GET /api/v1/logout
 ```
 
-## Included Routes for Browser
+## 浏览器测试路由
 
-The following routes are available for browser testing:
+以下 URL 可以用于浏览器测试：
 
 ```
 http://localhost:8181
@@ -73,11 +73,11 @@ http://localhost:8181/login
 http://localhost:8181/register
 ```
 
-These routes are using Mustache files in the webroot directory.
+上述路由使用了 Mustache 文档模板，存放在 webroot 目录下。
 
-Example Mustache files can be found in [https://github.com/PerfectExamples/Perfect-Turnstile-SQLite-Demo](https://github.com/PerfectExamples/Perfect-Turnstile-SQLite-Demo)
+关于 Mustache 文件模板的例子可以在这里找到： [https://github.com/PerfectExamples/Perfect-Turnstile-SQLite-Demo](https://github.com/PerfectExamples/Perfect-Turnstile-SQLite-Demo)
 
-## Creating an HTTP Server with Authentication
+## 创建一个带有身份验证功能的 HTTP 服务器
 
 ``` swift 
 import PerfectLib
@@ -87,39 +87,39 @@ import PerfectHTTPServer
 import SQLiteStORM
 import PerfectTurnstileSQLite
 
-// Used later in script for the Realm and how the user authenticates.
+// 下面这个变量在后续的Real对象程序脚本中将用于用户身份验证
 let pturnstile = TurnstilePerfectRealm()
 
-// Set the connection variable
+// 设置数据库连接变量
 connect = SQLiteConnect("./authdb")
 
-// Set up the Authentication table
+// 设置身份验证表
 let auth = AuthAccount(connect!)
 auth.setup()
 
-// Connect the AccessTokenStore
+// 连接到令牌数据区
 tokenStore = AccessTokenStore(connect!)
 tokenStore?.setup()
 
-// Create HTTP server.
+// 创建 HTTP 服务器
 let server = HTTPServer()
 
-// Register routes and handlers
+// 生成路由及其句柄
 let authWebRoutes = makeWebAuthRoutes()
 let authJSONRoutes = makeJSONAuthRoutes("/api/v1")
 
-// Add the routes to the server.
+// 将路由器注册到服务器
 server.addRoutes(authWebRoutes)
 server.addRoutes(authJSONRoutes)
 
-// Add more routes here
+// 增加更多路由
 var routes = Routes()
 // routes.add(method: .get, uri: "/api/v1/test", handler: AuthHandlersJSON.testHandler)
 
-// Add the routes to the server.
+// 将路由注册到服务器
 server.addRoutes(routes)
 
-// add routes to be checked for auth
+// 增加用于身份验证的路由
 var authenticationConfig = AuthenticationConfig()
 authenticationConfig.include("/api/v1/check")
 authenticationConfig.exclude("/api/v1/login")
@@ -127,62 +127,62 @@ authenticationConfig.exclude("/api/v1/register")
 
 let authFilter = AuthFilter(authenticationConfig)
 
-// Note that order matters when the filters are of the same priority level
+// 注意在相同优先级的情况下，过滤器的注册顺序决定了最终两个过滤器的优先顺序
 server.setRequestFilters([pturnstile.requestFilter])
 server.setResponseFilters([pturnstile.responseFilter])
 
 server.setRequestFilters([(authFilter, .high)])
 
-// Set a listen port of 8181
+// 设置监听端口为 8181
 server.serverPort = 8181
 
-// Where to serve static files from
+// 设置静态文件根目录
 server.documentRoot = "./webroot"
 
 do {
-	// Launch the HTTP server.
+	// 启动 HTTP 服务
 	try server.start()
 } catch PerfectError.networkError(let err, let msg) {
-	print("Network error thrown: \(err) \(msg)")
+	print("网络异常：\(err) \(msg)")
 }
 
 ```
 
-### Requirements
+### 基本要求
 
-Define the "Realm" - this is the Turnstile definition of how the authentication is handled. The implementation is specific to the SQLite datasource, although it is very similar between datasources and is designed to be generic and extendable.
+首先定义一下“域对象 Realm” —— 这是 Turnstile 定义的用户身份验证处理的管理方法。其实现方法是通过连接一个数据源（比如SQLite）—— 其实各个数据源的连接方法都大同小异， 您可以自行参考，在此基础之上进行扩展。
 
 ``` swift 
 let pturnstile = TurnstilePerfectRealm()
 ```
 
-Define the location and name of the SQLite3 database:
+定义SQLite3 数据库文件存放位置：
 
 ``` swift
 connect = SQLiteConnect("./authdb")
 ```
 
-Define, and initialize up the authentication table:
+定义并初始化身份验证表“
 
 ``` swift 
 let auth = AuthAccount(connect!)
 auth.setup()
 ```
 
-Connect the AccessTokenStore:
+连接到令牌数据区：
 
 ``` swift
 tokenStore = AccessTokenStore(connect!)
 tokenStore?.setup()
 ```
 
-Create the HTTP Server:
+启动 HTTP 服务器：
 
 ``` swift
 let server = HTTPServer()
 ```
 
-Register routes and handlers and add the routes to the server:
+创建路由和路由处理句柄，并将路由注册到服务器上：
 
 ``` swift 
 let authWebRoutes = makeWebAuthRoutes()
@@ -192,7 +192,7 @@ server.addRoutes(authWebRoutes)
 server.addRoutes(authJSONRoutes)
 ```
 
-Add routes to be checked for authentication:
+增加用于身份验证的路由
 
 ``` swift
 var authenticationConfig = AuthenticationConfig()
@@ -203,9 +203,9 @@ authenticationConfig.exclude("/api/v1/register")
 let authFilter = AuthFilter(authenticationConfig)
 ```
 
-These routes can be either seperate, or as an array of strings. They describe inclusions and exclusions. In a forthcoming release wildcard routes will be supported.
+输入路由的时候可以一个一个分别录入，或者整个儿做成一个数组一起放进去，可以把需要包含的路径和不希望包含的路径都分别进行登记处理。下一版的函数库允许使用通配符处理路径。
 
-Add request & response filters. Note the order which you specify filters that are of the same priority level:
+增加请求/响应的过滤器。注意如果不同过滤器的优先等级相同，则一定要处理好写程序的顺序，因为这种情况下程序顺序决定了最终路由表内过滤器的前后处理顺序：
 
 ``` swift
 server.setRequestFilters([pturnstile.requestFilter])
@@ -214,19 +214,20 @@ server.setResponseFilters([pturnstile.responseFilter])
 server.setRequestFilters([(authFilter, .high)])
 ```
 
-Now, set the port, static files location, and start the server:
+随后可以设置监听端口、静态文件并最终启动服务器：
 
 ``` swift
-// Set a listen port of 8181
+
+// 设置监听端口 8181
 server.serverPort = 8181
 
-// Where to serve static files from
+// 设置服务器静态文件根目录
 server.documentRoot = "./webroot"
 
 do {
-	// Launch the HTTP server.
+	// 启动 HTTP 服务器
 	try server.start()
 } catch PerfectError.networkError(let err, let msg) {
-	print("Network error thrown: \(err) \(msg)")
+	print("网络异常： \(err) \(msg)")
 }
 ```
