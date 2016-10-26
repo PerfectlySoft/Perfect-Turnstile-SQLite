@@ -1,4 +1,4 @@
-# Perfect Turnstile 与 SQLite 集成用户身份验证 [简体中文](README.zh_CN.md)
+# Perfect Turnstile 与 SQLite 集成用户身份验证 [English](README.md)
 
 <p align="center">
     <a href="http://perfect.org/get-involved.html" target="_blank">
