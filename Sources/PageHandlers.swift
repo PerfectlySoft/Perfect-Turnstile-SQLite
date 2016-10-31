@@ -10,9 +10,9 @@
 import PerfectMustache
 import PerfectHTTP
 
-struct MustacheHandler: MustachePageHandler {
+public struct MustacheHandler: MustachePageHandler {
 	var context: [String: Any]
-	func extendValuesForResponse(context contxt: MustacheWebEvaluationContext, collector: MustacheEvaluationOutputCollector) {
+	public func extendValuesForResponse(context contxt: MustacheWebEvaluationContext, collector: MustacheEvaluationOutputCollector) {
 		contxt.extendValues(with: context)
 		do {
 			contxt.webResponse.setHeader(.contentType, value: "text/html")
@@ -32,11 +32,11 @@ struct MustacheHandler: MustachePageHandler {
 
 
 extension HTTPResponse {
-	func render(template: String, context: [String: Any] = [String: Any]()) {
+	public func render(template: String, context: [String: Any] = [String: Any]()) {
 		mustacheRequest(request: self.request, response: self, handler: MustacheHandler(context: context), templatePath: request.documentRoot + "/views/\(template).mustache")
 	}
 
-	func redirect(path: String) {
+	public func redirect(path: String) {
 		self.status = .found
 		self.addHeader(.location, value: path)
 		self.completed()
