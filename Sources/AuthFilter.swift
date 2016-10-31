@@ -34,6 +34,7 @@ public struct AuthFilter: HTTPRequestFilter {
 				//print("AUTH NOT OK, booting")
 				response.status = .unauthorized
 				callback(.halt(request, response))
+				return
 			}
 		}
 		callback(.continue(request, response))
