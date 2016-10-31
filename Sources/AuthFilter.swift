@@ -7,6 +7,7 @@
 //
 
 import PerfectHTTP
+import SwiftString
 
 
 public struct AuthFilter: HTTPRequestFilter {
@@ -17,25 +18,35 @@ public struct AuthFilter: HTTPRequestFilter {
 	}
 
 	public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
-		//print("%%%%%%%%  CHECKING NOW  %%%%%%%%")
-
 		//		guard let denied = authenticationConfig.denied else {
 		//			callback(.continue(request, response))
 		//			return
 		//		}
 
-		if authenticationConfig.inclusions.contains(request.path) &&
-			!authenticationConfig.exclusions.contains(request.path) {
-			//print("PERFORM AUTH")
-			if request.user.authenticated {
-				//print("AUTH OK")
-				callback(.continue(request, response))
-			} else {
-				//print("AUTH NOT OK, booting")
-				response.status = .unauthorized
-				callback(.halt(request, response))
-				return
-			}
+		var checkAuth = false
+		let wildcardInclusions = authenticationConfig.inclusions.filter({$0.contains("*")})
+		let wildcardExclusions = authenticationConfig.exclusions.filter({$0.contains("*")})
+
+		// check if specifically in inclusions
+		if authenticationConfig.inclusions.contains(request.path) { checkAuth = true }
+		// check if covered by a wildcard
+		for wInc in wildcardInclusions {
+			if request.path.startsWith(wInc.split("*")[0]) { checkAuth = true }
+		}
+
+		// ignore check if sepecified in exclusions
+		if authenticationConfig.exclusions.contains(request.path) { checkAuth = false }
+		// check if covered by a wildcard
+		for wInc in wildcardExclusions {
+			if request.path.startsWith(wInc.split("*")[0]) { checkAuth = false }
+		}
+
+		if checkAuth && request.user.authenticated {
+			callback(.continue(request, response))
+		} else if checkAuth {
+			response.status = .unauthorized
+			callback(.halt(request, response))
+			return
 		}
 		callback(.continue(request, response))
 	}
