@@ -43,6 +43,7 @@ public struct AuthFilter: HTTPRequestFilter {
 
 		if checkAuth && request.user.authenticated {
 			callback(.continue(request, response))
+			return
 		} else if checkAuth {
 			response.status = .unauthorized
 			callback(.halt(request, response))
