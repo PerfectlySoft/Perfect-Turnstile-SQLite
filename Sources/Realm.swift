@@ -18,7 +18,7 @@ class AuthRealm : Realm {
 	func authenticate(credentials: Credentials) throws -> Account {
 
 
-		print("======= ENTRY =======")
+//		print("======= ENTRY =======")
 
 		switch credentials {
 		case let credentials as UsernamePassword:
@@ -36,10 +36,10 @@ class AuthRealm : Realm {
 	}
 
 	private func authenticate(credentials: AccessToken) throws -> Account {
-		print("======= AUTHENTICATE AccessToken =======")
+//		print("======= AUTHENTICATE AccessToken =======")
 		let account = AuthAccount(connect!)
 		let token = AccessTokenStore(connect!)
-		print(credentials.string)
+//		print(credentials.string)
 		do {
 			try token.get(credentials.string)
 			if token.check() == false {
@@ -54,7 +54,7 @@ class AuthRealm : Realm {
 
 
 	private func authenticate(credentials: UsernamePassword) throws -> Account {
-		print("======= AUTHENTICATE =======")
+//		print("======= AUTHENTICATE =======")
 		let account = AuthAccount(connect!)
 		do {
 			let thisAccount = try account.get(credentials.username, credentials.password)
@@ -85,7 +85,7 @@ class AuthRealm : Realm {
 	*/
 	public func register(credentials: Credentials) throws -> Account {
 
-		print("======= REGISTER =======")
+//		print("======= REGISTER =======")
 
 		let account = AuthAccount(connect!)
 		let newAccount = AuthAccount(connect!)
