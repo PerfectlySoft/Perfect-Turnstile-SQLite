@@ -79,6 +79,9 @@ open class AuthAccount : SQLiteStORM, Account {
 		let cursor = StORMCursor(limit: 1, offset: 0)
 		do {
 			try select(whereclause: "username = :1", params: [un], orderby: [], cursor: cursor)
+			if self.results.rows.count == 0 {
+				throw StORMError.noRecordFound
+			}
 			to(self.results.rows[0])
 		} catch {
 			print(error)
