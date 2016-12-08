@@ -46,14 +46,6 @@ open class AccessTokenStore : SQLiteStORM {
 		}
 		return rows
 	}
-	// Create the table if needed
-	public func setup() {
-		do {
-			try sqlExec("CREATE TABLE IF NOT EXISTS tokens (token TEXT PRIMARY KEY NOT NULL, userid TEXT, created INTEGER, updated INTEGER, idle INTEGER)")
-		} catch {
-			print(error)
-		}
-	}
 
 
 	private func now() -> Int {
