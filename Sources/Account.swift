@@ -36,14 +36,14 @@ open class AuthAccount : SQLiteStORM, Account {
 
 	// Need to do this because of the nature of Swift's introspection
 	override open func to(_ this: StORMRow) {
-		uniqueID	= this.data["uniqueID"] as! String
-		username	= (this.data["username"] as! String)
-		password	= (this.data["password"] as! String) // lets not read the password!
-		facebookID	= (this.data["facebookID"] as! String)
-		googleID	= (this.data["googleID"] as! String)
-		firstname	= (this.data["firstname"] as! String)
-		lastname	= (this.data["lastname"] as! String)
-		email		= (this.data["email"] as! String)
+		uniqueID	= this.data["uniqueID"] as? String ?? ""
+		username	= this.data["username"] as? String ?? ""
+		password	= this.data["password"] as? String ?? ""
+		facebookID	= this.data["facebookID"] as? String ?? ""
+		googleID	= this.data["googleID"] as? String ?? ""
+		firstname	= this.data["firstname"] as? String ?? ""
+		lastname	= this.data["lastname"] as? String ?? ""
+		email		= this.data["email"] as? String ?? ""
 	}
 
 	func rows() -> [AuthAccount] {
@@ -57,17 +57,7 @@ open class AuthAccount : SQLiteStORM, Account {
 	}
 
 
-	// Create the table if needed
-	public func setup() {
-		do {
-			try sqlExec("CREATE TABLE IF NOT EXISTS users (uniqueID TEXT PRIMARY KEY NOT NULL, username TEXT, password TEXT, facebookID TEXT, googleID TEXT, firstname TEXT, lastname TEXT, email TEXT)")
-		} catch {
-			print(error)
-		}
-	}
-
 	func make() throws {
-		print("IN MAKE")
 		do {
 			password = BCrypt.hash(password: password)
 			try create() // can't use save as the id is populated
