@@ -10,17 +10,12 @@ import Foundation
 import TurnstileCrypto
 import Turnstile
 import SQLiteStORM
+import TurnstilePerfect
 
 /**
 SQLiteSessionManager manages sessions via SQLite storage
 */
-public class PerfectSessionManager: SessionManager {
-	/// Dictionary of sessions
-	//private var sessions = [String: String]()
-	private let random: Random = URandom()
-
-	/// Initializes the Session Manager. No config needed!
-	public init() {}
+extension PerfectSessionManager {
 
 	/// Creates a session for a given Subject object and returns the identifier.
 	public func createSession(account: Account) -> String {
@@ -37,7 +32,6 @@ public class PerfectSessionManager: SessionManager {
 		} catch {
 			print(error)
 		}
-		//sessions.removeValue(forKey: identifier)
 	}
 
 	/**
