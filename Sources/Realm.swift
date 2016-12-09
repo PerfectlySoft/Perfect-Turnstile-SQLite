@@ -11,7 +11,11 @@ import SQLiteStORM
 import TurnstileCrypto
 import TurnstilePerfect
 
-extension AuthRealm {
+public class AuthRealm : Realm {
+	public var random: Random = URandom()
+
+	public init() {}
+
 	public func authenticate(credentials: Credentials) throws -> Account {
 
 		switch credentials {

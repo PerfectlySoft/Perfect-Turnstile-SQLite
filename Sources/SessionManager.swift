@@ -15,7 +15,8 @@ import TurnstilePerfect
 /**
 SQLiteSessionManager manages sessions via SQLite storage
 */
-extension PerfectSessionManager {
+open class PerfectSessionManager: SessionManager {
+	public let random: Random = URandom()
 
 	/// Creates a session for a given Subject object and returns the identifier.
 	public func createSession(account: Account) -> String {
