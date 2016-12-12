@@ -13,21 +13,31 @@ import SwiftRandom
 import Turnstile
 
 
-
+/// Class for handling the tokens that are used for JSON API and Web authentication
 open class AccessTokenStore : SQLiteStORM {
 
+	/// The token itself.
 	var token: String = ""
+
+	/// The userid relates to the Users object UniqueID
 	var userid: String = ""
+
+	/// Integer relaing to the created date/time
 	var created: Int = 0
+
+	/// Integer relaing to the last updated date/time
 	var updated: Int = 0
+
+	/// Idle period specified when token was created
 	var idle: Int = 86400 // 86400 seconds = 1 day
 
+	/// Table name used to store Tokens
 	override open func table() -> String {
 		return "tokens"
 	}
 
 
-	// Need to do this because of the nature of Swift's introspection
+	/// Set incoming data from database to object
 	open override func to(_ this: StORMRow) {
 		token		= this.data["token"] as! String
 		userid		= (this.data["userid"] as! String)
@@ -37,6 +47,7 @@ open class AccessTokenStore : SQLiteStORM {
 
 	}
 
+	/// Iterate through rows and set to object data
 	func rows() -> [AccessTokenStore] {
 		var rows = [AccessTokenStore]()
 		for i in 0..<self.results.rows.count {
@@ -52,8 +63,8 @@ open class AccessTokenStore : SQLiteStORM {
 		return Int(Date.timeIntervalSinceReferenceDate)
 	}
 
-	// checks to see if the token is active
-	// upticks the updated int to keep it alive.
+	/// Checks to see if the token is active
+	/// Upticks the updated int to keep it alive.
 	public func check() -> Bool? {
 		if (updated + idle) < now() { return false } else {
 			do {
@@ -66,6 +77,7 @@ open class AccessTokenStore : SQLiteStORM {
 		}
 	}
 
+	/// Triggers creating a new token.
 	public func new(_ u: String) -> String {
 		let rand = URandom()
 		token = rand.secureToken
